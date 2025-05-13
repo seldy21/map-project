@@ -1,30 +1,17 @@
 @import "tailwindcss";
 
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: fixed;
-  width: 100%;
-  top: 0;
-  height: 60px;
-  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  background-color: white;
-  z-index: 1000;
+.navbar {  
+  @apply flex justify-between items-center fixed w-full top-0 h-16 shadow-md bg-white z-50 px-4;
 }
 
 .navbar__logo {
   color: darkblue;
-  font-size: 1.5rem;
-  font-weight: bold;
-  cursor: pointer;
+
+  @apply text-xl font-bold cursor-pointer;
 }
 
 .navbar__list {
-  padding: 0 1.2rem;
-  gap: 0.9rem;
-  display: flex;
-  align-items: center;
+  @apply flex gap-4 items-center px-5;
 }
 
 .navbar__button {
@@ -32,7 +19,7 @@
 }
 
 .navbar__list--item {
-  cursor: pointer;
+  @apply cursor-pointer
 }
 
 .navbar__list--item:hover {
