@@ -1,5 +1,15 @@
+/* global kakao */
+
+declare global {
+  interface Window {
+    kakao: any;
+  }
+}
+
 export default function Home() {
+  // kakao map 로드
+  const loadKakaoMap = () => {}
   return (
-      <h1>Map index page</h1>
+      <div id="map" className="w-full h-screen">Map index page</div>
   );
 }
