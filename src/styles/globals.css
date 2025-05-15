@@ -62,3 +62,7 @@
   }
 
 }
+
+.infoWindow {
+  @apply bg-blue-900 text-white p-4 rounded-lg shadow-lg;
+}

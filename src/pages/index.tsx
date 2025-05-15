@@ -1,7 +1,9 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-/* global kakao */
-
-import Script from "next/script";
+import Map from "@/components/Map";
+import Markers from "@/components/Markers";
+import StoreBox from "@/components/StoreBox";
+import * as stores from "@/data/storeData.json";
+import { StoreType } from "@/interface";
+import { useEffect, useState } from "react";
 
 declare global {
   interface Window {
@@ -12,24 +14,19 @@ declare global {
 }
 
 export default function Home() {
-  const loadKakaoMap = () => {
-    window.kakao.maps.load(function () {
-      const container = document.getElementById("map");
-      const options = {
-        center: new window.kakao.maps.LatLng(33.450701, 126.570667),
-        level: 3,
-      };
-      new window.kakao.maps.Map(container, options);
-    });
-  };
+  const [map, setMap] = useState<any>(null);
+  const storeDatas = stores.DATA as StoreType[];
+
+  const [currentStore, setCurrentStore] = useState(null);
+
+  useEffect(() => {
+    console.log("currentStore", currentStore);
+  }, [currentStore]);
   return (
     <>
-      <Script
-        type="text/javascript"
-        src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID}&libraries=services,clusterer,drawing&autoload=false`}
-        onReady={loadKakaoMap}
-      />
-      <div id="map" className="w-full h-screen bg-amber-50"></div>
+    <Map setMap={setMap}/>
+    <Markers storeDatas={storeDatas} map={map} setCurrentStore={setCurrentStore}/>
+    <StoreBox store={currentStore} setStore={setCurrentStore}/>
     </>
   );
 }
