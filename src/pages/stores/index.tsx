@@ -14,8 +14,8 @@ export default function StoreListPage({ stores }: { stores: StoreType[] }) {
               <Image
                 className="w-10 h-10 rounded-full"
                 src={
-                  store?.bizcnd_code_nm
-                    ? `/images/mapMarkers/${store?.bizcnd_code_nm}.png`
+                  store?.category
+                    ? `/images/mapMarkers/${store?.category}.png`
                     : "/images/mapMarkers/default.png"
                 }
                 alt="marker"
@@ -24,14 +24,14 @@ export default function StoreListPage({ stores }: { stores: StoreType[] }) {
               />
               <div>
                 <div className="text-sm font-semibold leading-9 text-gray-900">
-                  {store?.upso_nm}
+                  {store?.name}
                 </div>
-                <div className="text-xs mt-1 truncate font-semibold leading-5 text-gray-500">{store?.tel_no ?? "번호없음"}</div>
+                <div className="text-xs mt-1 truncate font-semibold leading-5 text-gray-500">{store?.phone ?? "번호없음"}</div>
               </div>
             </div>
             <div className="hidden sm:flex sm:flex-col sm:items-end sm:gap-2">
-              <div className="text-xs">{store?.rdn_code_nm}</div>
-              <div className="text-xs text-gray-500">{store?.crtfc_gbn_nm} | {store?.bizcnd_code_nm}</div>
+              <div className="text-xs">{store?.address}</div>
+              <div className="text-xs text-gray-500">{store?.foodCertifyName} | {store?.category}</div>
             </div>
             {/* <div className="ml-3">
             <p className="text-sm font-medium text-gray-900">{store.upso_nm}</p>

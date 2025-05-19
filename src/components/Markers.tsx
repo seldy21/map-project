@@ -14,8 +14,8 @@ export default function Markers({
 }: MarkersProps) {
   const loadKakaoMarkers = useCallback(() => {
     stores?.map((store) => {
-      const imageSrc = store.bizcnd_code_nm
-        ? `/images/mapMarkers/${store.bizcnd_code_nm}.png`
+      const imageSrc = store.category
+        ? `/images/mapMarkers/${store.category}.png`
         : "/images/mapMarkers/default.png"; // 마커이미지의 주소입니다
       const imageSize = new window.kakao.maps.Size(40, 40); // 마커이미지의 크기입니다
       const imageOption = { offset: new window.kakao.maps.Point(27, 69) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
@@ -27,8 +27,8 @@ export default function Markers({
       );
       //식당 데이터 마커 위치
       const markerPosition = new window.kakao.maps.LatLng(
-        store.y_dnts,
-        store.x_cnts
+        store.latitude,
+        store.longitude
       );
 
       //식당 데이터 마커 생성
@@ -40,7 +40,7 @@ export default function Markers({
       marker.setMap(map);
 
       //마커에 마우스 오버시 정보창 생성
-      const content = `<div class="infoWindow">${store?.upso_nm}</div>`; //인포 윈도우에 표시될 내용
+      const content = `<div class="infoWindow">${store?.name}</div>`; //인포 윈도우에 표시될 내용
 
       // 커스텀 오버레이를 생성합니다
       const customOverlay = new window.kakao.maps.CustomOverlay({

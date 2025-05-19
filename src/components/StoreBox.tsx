@@ -1,3 +1,4 @@
+import { StoreType } from "@/interface";
 import Image from "next/image";
 import { Dispatch, SetStateAction } from "react";
 import { FaCheck, FaInfoCircle, FaPhone } from "react-icons/fa";
@@ -5,7 +6,7 @@ import { FaLocationDot } from "react-icons/fa6";
 import { IoIosClose } from "react-icons/io";
 
 interface StoreBoxProps {
-  store: any;
+  store: StoreType | null;
   setStore: Dispatch<SetStateAction<any>>;
 }
 
@@ -19,8 +20,8 @@ export default function StoreBox({ store, setStore }: StoreBoxProps) {
               <div className="flex gap-3 items-center">
                 <Image
                   src={
-                    store?.bizcnd_code_nm
-                      ? `/images/mapMarkers/${store?.bizcnd_code_nm}.png`
+                    store?.category
+                      ? `/images/mapMarkers/${store?.category}.png`
                       : "/images/mapMarkers/default.png"
                   }
                   alt="marker"
@@ -28,8 +29,8 @@ export default function StoreBox({ store, setStore }: StoreBoxProps) {
                   height={40}
                 />
                 <div>
-                  <div className="font-semibold">{store.upso_nm}</div>
-                  <div>{store.cob_code_nm}</div>
+                  <div className="font-semibold">{store.name}</div>
+                  <div>{store.storeType}</div>
                 </div>
               </div>
               <button type="button" onClick={() => setStore(null)}>
@@ -39,19 +40,19 @@ export default function StoreBox({ store, setStore }: StoreBoxProps) {
            <div className="flex flex-col gap-3 mt-5">
              <div className="flex items-center gap-2">
                <FaLocationDot />
-               <div className="text-sm">{store.rdn_code_nm}</div>
+               <div className="text-sm">{store.address}</div>
              </div>
              <div className="flex items-center gap-2">
                <FaPhone />
-               <div className="text-sm">{store.tel_no}</div>
+               <div className="text-sm">{store.phone}</div>
              </div>
              <div className="flex items-center gap-2">
                <FaInfoCircle />
-               <div className="text-sm">{store.crtfc_gbn_nm}</div>
+               <div className="text-sm">{store.foodCertifyName}</div>
              </div>
-             {store.bizcnd_code_nm && <div className="flex items-center gap-2">
+             {store.category && <div className="flex items-center gap-2">
                <FaCheck />
-               <div className="text-sm">{store.bizcnd_code_nm}</div>
+               <div className="text-sm">{store.category}</div>
              </div>}
            </div>
           </div>
