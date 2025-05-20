@@ -1,4 +1,5 @@
 import { StoreType } from "@/interface";
+import axios from "axios";
 import Image from "next/image";
 
 export default function StoreListPage({ stores }: { stores: StoreType[] }) {
@@ -26,17 +27,17 @@ export default function StoreListPage({ stores }: { stores: StoreType[] }) {
                 <div className="text-sm font-semibold leading-9 text-gray-900">
                   {store?.name}
                 </div>
-                <div className="text-xs mt-1 truncate font-semibold leading-5 text-gray-500">{store?.phone ?? "번호없음"}</div>
+                <div className="text-xs mt-1 truncate font-semibold leading-5 text-gray-500">
+                  {store?.phone ?? "번호없음"}
+                </div>
               </div>
             </div>
             <div className="hidden sm:flex sm:flex-col sm:items-end sm:gap-2">
               <div className="text-xs">{store?.address}</div>
-              <div className="text-xs text-gray-500">{store?.foodCertifyName} | {store?.category}</div>
+              <div className="text-xs text-gray-500">
+                {store?.foodCertifyName} | {store?.category}
+              </div>
             </div>
-            {/* <div className="ml-3">
-            <p className="text-sm font-medium text-gray-900">{store.upso_nm}</p>
-            <p className="text-sm text-gray-500">{store.cob_code_nm}</p>
-          </div> */}
           </li>
         ))}
       </ul>
@@ -45,10 +46,8 @@ export default function StoreListPage({ stores }: { stores: StoreType[] }) {
 }
 
 export async function getStaticProps() {
-  const stores = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}api/store`
-  ).then((res) => res.json());
+  const stores = await axios(`${process.env.NEXT_PUBLIC_API_URL}api/store`);
   return {
-    props: { stores },
+    props: { stores : stores.data },
   };
 }

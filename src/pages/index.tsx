@@ -2,7 +2,8 @@ import Map from "@/components/Map";
 import Markers from "@/components/Markers";
 import StoreBox from "@/components/StoreBox";
 import { StoreType } from "@/interface";
-import { useEffect, useState } from "react";
+import axios from "axios";
+import { useState } from "react";
 
 declare global {
   interface Window {
@@ -18,9 +19,6 @@ export default function Home({ stores }: { stores: StoreType[] }) {
 
   const [currentStore, setCurrentStore] = useState(null);
 
-  useEffect(() => {
-    console.log("currentStore", currentStore);
-  }, [currentStore]);
   return (
     <>
       <Map setMap={setMap} />
@@ -35,12 +33,10 @@ export default function Home({ stores }: { stores: StoreType[] }) {
 }
 
 export async function getStaticProps() {
-  const stores = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}api/store`
-  ).then((res) => res.json());
+  const stores = await axios(`${process.env.NEXT_PUBLIC_API_URL}api/store`);
 
   return {
-    props: { stores },
+    props: { stores : stores.data },
     revalidate: 60 * 60,
   };
 }
