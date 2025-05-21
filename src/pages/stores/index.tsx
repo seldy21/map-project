@@ -1,7 +1,7 @@
 import Loading from "@/components/Loading";
 import Pagination from "@/components/Pagination";
 import { StoreAPIResponse } from "@/interface";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -22,6 +22,20 @@ export default function StoreListPage() {
       return data as StoreAPIResponse;
     },
   });
+
+  const fetchStores = async ({ pageParam }: { pageParam: number }) => {
+    const { data } = await axios(`/api/store?page=${pageParam}`);
+    return data;
+  };
+
+  const result = useInfiniteQuery({
+    queryKey: ["stores"],
+    queryFn: fetchStores,
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
+  });
+
+  console.log(result);
 
   if (isError) {
     return (
@@ -73,7 +87,7 @@ export default function StoreListPage() {
           ))
         )}
       </ul>
-      <Pagination totalPage={stores?.totalPage ?? 0}/>
+      <Pagination totalPage={stores?.totalPage ?? 0} />
     </div>
   );
 }
