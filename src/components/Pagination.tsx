@@ -30,12 +30,9 @@ export default function Pagination({ totalPage }: PaginationProps) {
 
       if (endPage > totalPage) {
         const diff = endPage - totalPage;
-        console.log(diff)
         startPage = startPage - diff;
         endPage = totalPage;
       }
-
-      console.log(totalPage, startPage, endPage);
 
       for (let i = startPage; i <= endPage; i++) {
         setPageNumbers((pre) => [...pre, i]);
