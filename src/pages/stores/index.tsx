@@ -1,42 +1,34 @@
+import IntersectionObserver from "@/components/IntersectionObserver";
 import Loading from "@/components/Loading";
-import Pagination from "@/components/Pagination";
-import { StoreAPIResponse } from "@/interface";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { StoreType } from "@/interface";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
-import { useRouter } from "next/router";
 import React from "react";
 
 export default function StoreListPage() {
-  const router = useRouter();
-  const { page = "1" } = router.query;
-
-  const {
-    isError,
-    isLoading,
-    data: stores,
-  } = useQuery({
-    queryKey: [`stores-${page}`],
-    queryFn: async () => {
-      const { data } = await axios(`/api/store?page=${page}`);
-      return data as StoreAPIResponse;
-    },
-  });
-
   const fetchStores = async ({ pageParam }: { pageParam: number }) => {
     const { data } = await axios(`/api/store?page=${pageParam}`);
     return data;
   };
 
-  const result = useInfiniteQuery({
+  const {
+    data: stores,
+    isFetching,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+    isError,
+    isLoading,
+  } = useInfiniteQuery({
     queryKey: ["stores"],
     queryFn: fetchStores,
     initialPageParam: 1,
-    getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
+    getNextPageParam: (lastPage: any) =>
+      lastPage.data?.length > 0 ? lastPage.page + 1 : undefined,
   });
 
-  console.log(result);
-
+  console.log(stores);
   if (isError) {
     return (
       <div className="w-full h-screen mx-auto pt-[25%] text-red-500 text-center font-semibold">
@@ -51,43 +43,47 @@ export default function StoreListPage() {
         {isLoading ? (
           <Loading />
         ) : (
-          stores?.data?.map((store, index) => (
-            <li
-              key={`store_${index}`}
-              className="flex justify-between gap-6 py-3 sm:py-4 items-center"
-            >
-              <div className="flex gap-x-4">
-                <Image
-                  className="w-10 h-10 rounded-full"
-                  src={
-                    store?.category
-                      ? `/images/mapMarkers/${store?.category}.png`
-                      : "/images/mapMarkers/default.png"
-                  }
-                  alt="marker"
-                  width={48}
-                  height={48}
-                />
-                <div>
-                  <div className="text-sm font-semibold leading-9 text-gray-900">
-                    {store?.name}
+          stores?.pages?.map((page, index) => (
+            <React.Fragment key={`store_group_${index}`}>
+              {page.data.map((store: StoreType, i: number) => (
+                <li
+                  key={`store_${index}_${i}`}
+                  className="flex justify-between gap-6 py-3 sm:py-4 items-center"
+                >
+                  <div className="flex gap-x-4">
+                    <Image
+                      className="w-10 h-10 rounded-full"
+                      src={
+                        store?.category
+                          ? `/images/mapMarkers/${store?.category}.png`
+                          : "/images/mapMarkers/default.png"
+                      }
+                      alt="marker"
+                      width={48}
+                      height={48}
+                    />
+                    <div>
+                      <div className="text-sm font-semibold leading-9 text-gray-900">
+                        {store?.name}
+                      </div>
+                      <div className="text-xs mt-1 truncate font-semibold leading-5 text-gray-500">
+                        {store?.phone ?? "번호없음"}
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-xs mt-1 truncate font-semibold leading-5 text-gray-500">
-                    {store?.phone ?? "번호없음"}
+                  <div className="hidden sm:flex sm:flex-col sm:items-end sm:gap-2">
+                    <div className="text-xs">{store?.address}</div>
+                    <div className="text-xs text-gray-500">
+                      {store?.foodCertifyName} | {store?.category}
+                    </div>
                   </div>
-                </div>
-              </div>
-              <div className="hidden sm:flex sm:flex-col sm:items-end sm:gap-2">
-                <div className="text-xs">{store?.address}</div>
-                <div className="text-xs text-gray-500">
-                  {store?.foodCertifyName} | {store?.category}
-                </div>
-              </div>
-            </li>
+                </li>
+              ))}
+            </React.Fragment>
           ))
         )}
       </ul>
-      <Pagination totalPage={stores?.totalPage ?? 0} />
+     {(hasNextPage || isFetching) && <IntersectionObserver intersectionAction={fetchNextPage} isLoading={isFetchingNextPage} />}
     </div>
   );
 }
